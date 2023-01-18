@@ -30,10 +30,10 @@ export function Routes() {
     <NavigationContainer theme={theme}>
       <AppRoutes />
       {
-        // notification?.title &&
+        notification?.title &&
         <Notification 
-          title={'notification.title'} 
-          onClose={() => setNotification(undefined)} 
+        data={notification} 
+        onClose={() => setNotification(undefined)} 
         />
       }
     </NavigationContainer>
