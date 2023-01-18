@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { StatusBar, Platform } from 'react-native';
-import OneSignal, { NotificationReceivedEvent, OSNotification } from 'react-native-onesignal';
+import OneSignal from 'react-native-onesignal';
 import { NativeBaseProvider } from 'native-base';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 
@@ -8,7 +7,6 @@ import { Routes } from './src/routes';
 
 import { THEME } from './src/theme';
 import { Loading } from './src/components/Loading';
-import { Notification } from './src/components/Notification';
 import { tagUserInfoCreate } from './src/notifications/notificationsTags';
 
 import { CartContextProvider } from './src/contexts/CartContext';
@@ -20,21 +18,8 @@ OneSignal.promptForPushNotificationsWithUserResponse()
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
-  const [notification, setNotification] =  useState<OSNotification>();
 
   tagUserInfoCreate();
-
-  useEffect(() => {
-    const unsubscribe = OneSignal
-    .setNotificationWillShowInForegroundHandler((notificationRecivedEvent: NotificationReceivedEvent) => {
-      const response = notificationRecivedEvent.getNotification();
-
-      setNotification(response);
-    })
-
-    return () => unsubscribe;
-
-  },[])
 
   return (
     <NativeBaseProvider theme={THEME}>
@@ -47,14 +32,6 @@ export default function App() {
         {fontsLoaded ? <Routes /> : <Loading />}
       </CartContextProvider>
 
-
-      {
-        notification?.title && 
-        <Notification 
-          title={notification.title} 
-          onClose={() => setNotification(undefined)} 
-        />
-      }
     </NativeBaseProvider>
   );
 }
